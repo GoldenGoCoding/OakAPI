@@ -1,18 +1,16 @@
-﻿import java.io.Console;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Program {
-    private static final Console console = System.console();
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void out(String s) {
+    public static void Out(String s) {
         System.out.print(s);
     }
 
     public static String in(String s) {
-        out(s);
+        Out(s);
         return scanner.nextLine();
     }
 
@@ -40,8 +38,8 @@ public class Program {
             path = System.getProperty("user.home");
         }
 
-        System.out.print("\u001B[36m"); // Cyan color
-        out("""
+        Out("\u001B[36m"); // Cyan color
+        Out("""
                 ╔════════════════════════╗
                 ║ WELCOME TO OAK v.0.0.0 ║
                 ╚════════════════════════╝
@@ -50,8 +48,8 @@ public class Program {
                 """);
 
         while (true) {
-            System.out.print(colors[0]); // fgColor
-            System.out.print(colors[1]); // bgColor
+            Out(colors[0]); // fgColor
+            Out(colors[1]); // bgColor
             cmd = in("#~" + path.replace(":", "~").replace("\\", "~") + "~ ");
             e = cmd.split(" ");
             if (cmd.equals(" ") || cmd.equals("")) {
@@ -62,22 +60,22 @@ public class Program {
                 File[] files = directory.listFiles(File::isFile);
                 if (dirs != null) {
                     for (File item : dirs) {
-                        System.out.print(colors[6]); // dirColor
+                        Out(colors[6]); // dirColor
                         System.out.println(item.getName());
                     }
                 }
                 if (files != null) {
                     for (File item : files) {
-                        System.out.print(colors[5]); // fileColor
+                        Out(colors[5]); // fileColor
                         System.out.println(item.getName());
                     }
                 }
             } else if (cmd.startsWith("cls") || cmd.startsWith("clear")) {
-                System.out.print("\033[H\033[2J");
+                Out("\033[H\033[2J");
                 System.out.flush();
             } else {
-                System.out.print(colors[4]); // warnColor
-                out(String.format(
+                Out(colors[4]); // warnColor
+                Out(String.format(
                         "\n\"%s\" IS NOT RECOGNIZED AS A COMMAND, SCRIPT, OR PLUGIN\n\nPLEASE VERIFY SPELLING OR INSTALL PLUGIN BY RUNNING \"install %s\"\n\n",
                         e[0], e[0]));
             }
