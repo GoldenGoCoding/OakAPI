@@ -26,6 +26,7 @@ public class Program
         ];
         string path, cmd, version = "v0.0.0";
         string[] e;
+        string[] pE;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             path = Environment.SpecialFolder.Personal.ToString();
@@ -52,8 +53,10 @@ public class Program
         {
             Console.ForegroundColor = Colors[0];
             Console.BackgroundColor = Colors[1];
-            cmd = In(@"#~" + path.Replace(@":\", "~").Replace(@"\", "~") + "~ ");
+            cmd = In(@"#~" + path.Replace(@":\", ":").Replace(@"\", "~") + "~ ");
             e = cmd.Split(" ");
+            pE = path.Split(@"\");
+
             if (cmd == " ") { }
             else if (cmd == "") { }
             else if (cmd.StartsWith("dir"))
@@ -70,6 +73,28 @@ public class Program
                     Console.ForegroundColor = Colors[5];
                     Console.WriteLine(item.Split(@"\")[item.Split(@"\").Length - 1]);
                 }
+            }
+            else if (cmd.StartsWith(@"\"))
+            {
+                if (Directory.Exists(path+cmd))
+                {
+                    path += cmd;
+                }
+            }
+            else if (cmd.StartsWith(@"."))
+            {
+                int n = 0;
+                for (int i = 0;i<cmd.Length;i++)
+                {
+                    if (cmd[i].ToString()!=@"\") { n++; }
+                    if (cmd[i].ToString()==@"\") { break; }
+                }
+                int l = 0;
+                for (int i = 0;i<pE.Length-1;i++)
+                {
+                    l += pE[i].Length;
+                }
+                path = path.Substring();
             }
             else if (cmd.StartsWith("cls") || cmd.StartsWith("clear")) { Console.Clear(); }
             else
