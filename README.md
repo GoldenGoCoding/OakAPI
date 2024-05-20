@@ -1,4 +1,7 @@
-# Welcome to <img src="https://github.com/GoldenGoCoding/OakAPI/assets/101265437/0492b1d5-bcbd-48ed-a1bd-adab4fe6836e" alt="drawing" width="100"/>
+
+![OakAPI](https://github.com/GoldenGoCoding/OakAPI/assets/101265437/a020992c-5e5d-49e9-baf1-b2edb1d2d130)
+
+# Welcome
 
 ## Program.cs and Program.java are in **Oak** directory
 
