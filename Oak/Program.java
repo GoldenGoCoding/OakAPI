@@ -1,10 +1,11 @@
 import java.io.Console;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Program {
-    private static final Console console = System.console();
     private static final Scanner scanner = new Scanner(System.in);
 
     // ANSI escape codes for colors
@@ -61,6 +62,7 @@ public class Program {
 
         while (true) {
             System.out.print(colors[0]);
+            System.out.print(colors[1]);
             cmd = in("║ " + path.replace(":", ":").replace("\\", "~") + "~ ");
             e = cmd.split(" ");
             pE = path.split("\\\\");
@@ -95,25 +97,51 @@ public class Program {
                 } else {
                     System.out.print(colors[3]);
                     out("╒ \"" + path + cmd + "\"\n");
-                    System.out.print(colors[4]);
                     out("╘ Does not exist. Please check your spelling and try again\n");
                 }
             } else if (cmd.startsWith(".")) {
-                if (!path.equals("C:\\")) {
-                    int n = 0;
-                    for (int i = 0; i < cmd.length(); i++) {
-                        if (!cmd.substring(i, i + 1).equals("\\")) {
-                            n++;
-                        } else {
-                            break;
+                String buffer = "";
+                if (!cmd.equals("C:")) {
+                    for (int i = 0; i < pE.length - 1; i++) {
+                        buffer += pE[i];
+                        if (i != pE.length - 2) {
+                            buffer += "\\";
                         }
                     }
-                    int l = 0;
-                    for (int i = 0; i < pE.length - 1; i++) {
-                        l += pE[i].length();
-                    }
-                    path = path.substring(0, l + 2);
                 }
+                path = buffer + cmd.substring(1);
+            } else if (cmd.startsWith("write")) {
+                StringBuilder fileContent = new StringBuilder();
+                String currentLine;
+                String filename = "";
+                for (int i = 0; i < e.length; i++) {
+                    if (i == 1) {
+                        filename = e[i];
+                    }
+                }
+
+                out(String.format("""
+                        ║ Editing %s ║
+
+                        """, filename.toUpperCase()));
+
+                for (int i = 1; i > 0; i++) {
+                    currentLine = in("║ " + i + "~ ");
+                    if (currentLine.equals("\\quit")) {
+                        break;
+                    } else {
+                        fileContent.append(currentLine).append("\n");
+                    }
+                }
+
+                try (FileWriter writer = new FileWriter(new File(path, filename))) {
+                    writer.write(fileContent.toString());
+                } catch (IOException ex) {
+                    System.out.print(colors[3]);
+                    out("Error writing to file: " + ex.getMessage());
+                }
+            } else if (cmd.startsWith("read")) {
+                // Implement read functionality if needed
             } else if (cmd.startsWith("cls") || cmd.startsWith("clear")) {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();

@@ -1,4 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.IO.Enumeration;
+using System.Runtime.InteropServices;
+using System.Security;
 
 public class Program
 {
@@ -107,6 +109,38 @@ public class Program
                     }
                 }
                 path = buffer + cmd.Substring(1);
+            }
+            else if (cmd.StartsWith("write"))
+            {
+                string file = "";
+                string currentLine;
+                string filename="";
+                for (int i = 0; i < e.Length; i++)
+                {
+                    if (i == 1) { filename = e[i]; }
+                }
+
+                Out($"""
+                    ║ Editing {filename.ToUpper()} ║
+
+                    """);
+
+                for (int i=1;i>0;i++)
+                {
+                    currentLine = In($"║ {i}~ ");
+                    if (currentLine == @"\quit")
+                    {
+                        break;
+                    } else
+                    {
+                        file+=currentLine+"\n";
+                    }
+                }
+                File.WriteAllText(path+@"\"+filename, file);
+            }
+            else if (cmd.StartsWith("read"))
+            {
+
             }
             else if (cmd.StartsWith("cls") || cmd.StartsWith("clear")) { Console.Clear(); }
             else
