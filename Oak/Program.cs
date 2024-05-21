@@ -95,12 +95,18 @@ public class Program
             }
             else if (cmd.StartsWith(@"."))
             {
-                if (path != @"C:")
+                string buffer = "";
+                if (cmd!=@"C:")
                 {
-                    string buffer = "";
-                    for (int i = 0; i < pE.Length - 1; i++) { buffer += $@"{pE[i]}"; if (i != pE.Length - 2) {} }
-                    path = buffer;
+                    for (int i = 0; i < pE.Length - 1; i++) {
+                        buffer += $@"{pE[i]}";
+                        if (i != pE.Length - 2)
+                        {
+                            buffer += @"\";
+                        }
+                    }
                 }
+                path = buffer + cmd.Substring(1);
             }
             else if (cmd.StartsWith("cls") || cmd.StartsWith("clear")) { Console.Clear(); }
             else
