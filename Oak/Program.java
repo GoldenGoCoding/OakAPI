@@ -1,7 +1,7 @@
-import java.io.Console;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -11,7 +11,7 @@ public class Program {
     // ANSI escape codes for colors
     private static final String RESET = "\033[0m";
     private static final String WHITE = "\033[37m";
-    private static final String BLACK = "\033[40m";
+    private static final String BLACK_BG = "\033[40m";
     private static final String GREEN = "\033[32m";
     private static final String RED = "\033[31m";
     private static final String YELLOW = "\033[33m";
@@ -29,14 +29,16 @@ public class Program {
     public static void main(String[] args) {
         String[] colors = {
                 WHITE, // 0 fgColor
-                BLACK, // 1 bgColor
+                BLACK_BG, // 1 bgColor
                 GREEN, // 2 positiveColor
                 RED,   // 3 negativeColor
                 YELLOW, // 4 warnColor
                 RED,    // 5 fileColor
                 GREEN   // 6 dirColor
         };
-        String path, cmd, version = "INCOMPLETE";
+        String path;
+        String cmd;
+        String version = "vPre.0.0";
         String[] e;
         String[] pE;
 
@@ -51,9 +53,9 @@ public class Program {
 
         System.out.print(CYAN);
         out("""
-                ╔════════════════╗
-                ║ WELCOME TO OAK ║
-                ╚════════════════╝
+                ╔═════════════════════════╗
+            ════╣ WELCOME TO OAK vPre.0.0 ║
+                ╚═════════════════════════╝
 
                 
                 """);
@@ -62,7 +64,6 @@ public class Program {
 
         while (true) {
             System.out.print(colors[0]);
-            System.out.print(colors[1]);
             cmd = in("║ " + path.replace(":", ":").replace("\\", "~") + "~ ");
             e = cmd.split(" ");
             pE = path.split("\\\\");
@@ -100,16 +101,16 @@ public class Program {
                     out("╘ Does not exist. Please check your spelling and try again\n");
                 }
             } else if (cmd.startsWith(".")) {
-                String buffer = "";
+                StringBuilder buffer = new StringBuilder();
                 if (!cmd.equals("C:")) {
                     for (int i = 0; i < pE.length - 1; i++) {
-                        buffer += pE[i];
+                        buffer.append(pE[i]);
                         if (i != pE.length - 2) {
-                            buffer += "\\";
+                            buffer.append("\\");
                         }
                     }
                 }
-                path = buffer + cmd.substring(1);
+                path = buffer.toString() + cmd.substring(1);
             } else if (cmd.startsWith("write")) {
                 StringBuilder fileContent = new StringBuilder();
                 String currentLine;
@@ -121,12 +122,12 @@ public class Program {
                 }
 
                 out(String.format("""
-                        ║ Editing %s ║
+                        ║ Editing %s
 
                         """, filename.toUpperCase()));
 
-                for (int i = 1; i > 0; i++) {
-                    currentLine = in("║ " + i + "~ ");
+                for (int i = 1; ; i++) {
+                    currentLine = in("╠ " + i + "~ ");
                     if (currentLine.equals("\\quit")) {
                         break;
                     } else {
@@ -141,7 +142,26 @@ public class Program {
                     out("Error writing to file: " + ex.getMessage());
                 }
             } else if (cmd.startsWith("read")) {
-                // Implement read functionality if needed
+                String filename = "";
+                for (int i = 0; i < e.length; i++) {
+                    if (i == 1) {
+                        filename = e[i];
+                    }
+                }
+
+                out(String.format("""
+                        ║ Reading %s ║
+
+                        """, filename.toUpperCase()));
+                try {
+                    String[] fileContent = Files.readAllLines(Paths.get(path, filename)).toArray(new String[0]);
+                    for (int i = 0; i < fileContent.length; i++) {
+                        out(String.format("║ %d~ %s\n", i, fileContent[i]));
+                    }
+                } catch (IOException ex) {
+                    System.out.print(colors[3]);
+                    out("Error reading file: " + ex.getMessage());
+                }
             } else if (cmd.startsWith("cls") || cmd.startsWith("clear")) {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();

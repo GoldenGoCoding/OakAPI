@@ -26,7 +26,7 @@ public class Program
             ConsoleColor.Red,    // 5 fileColor
             ConsoleColor.Green   // 6 dirColor
         ];
-        string path, cmd, version = "INCOMPLETE";
+        string path, cmd, version = "vPre.0.0";
         string[] e;
         string[] pE;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -44,9 +44,9 @@ public class Program
         
         Console.ForegroundColor = ConsoleColor.Cyan;
         Out($"""
-                ╔════════════════╗
-                ║ WELCOME TO OAK ║
-                ╚════════════════╝
+                    ╔═════════════════════════╗
+                ════╣ WELCOME TO OAK vPre.0.0 ║
+                    ╚═════════════════════════╝
 
                 
                 """);
@@ -121,13 +121,13 @@ public class Program
                 }
 
                 Out($"""
-                    ║ Editing {filename.ToUpper()} ║
+                    ║ Editing {filename.ToUpper()}
 
                     """);
 
                 for (int i=1;i>0;i++)
                 {
-                    currentLine = In($"║ {i}~ ");
+                    currentLine = In($"╠ {i}~ ");
                     if (currentLine == @"\quit")
                     {
                         break;
@@ -140,6 +140,23 @@ public class Program
             }
             else if (cmd.StartsWith("read"))
             {
+                string filename = "";
+                for (int i = 0; i < e.Length; i++)
+                {
+                    if (i == 1) { filename = e[i]; }
+                }
+
+                Out($"""
+                    ║ Reading {filename.ToUpper()}
+                    ║
+
+                    """);
+                string[] file = File.ReadAllText(path + @"\" + filename).Split("\n");
+                int n = 0;
+                foreach (var i in file)
+                {
+                    Out($"║ {n++}~ {i}\n"   );
+                }
 
             }
             else if (cmd.StartsWith("cls") || cmd.StartsWith("clear")) { Console.Clear(); }
